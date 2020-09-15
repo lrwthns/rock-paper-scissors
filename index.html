@@ -1,0 +1,79 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let playerSelection;
+        let computerSelection;
+        let playerScore=0;
+        let computerScore=0;
+
+        function computerPlay() {
+            let rPS = ["rock", "paper", "scissors"];
+            let cS = rPS[Math.floor(Math.random() * rPS.length)];
+            return cS;
+        }
+                
+        function playRound(playerSelection, computerSelection) {
+            if (playerSelection==computerSelection) {
+                playerScore++; 
+                computerScore++;
+                alert( `You: ${playerSelection}. Computer: ${computerSelection}. It's a tie!`);
+            } else if (playerSelection=="rock" && computerSelection=="paper") {
+                computerScore++;
+                alert(`You: ${playerSelection}. Computer: ${computerSelection}. Paper beats rock, you lose.`);
+            } else if (playerSelection=="rock" && computerSelection=="scissors") {
+                playerScore++;
+                alert(`You: ${playerSelection}. Computer: ${computerSelection}. Rock beats scissors, you win.`);
+            } else if (playerSelection=="paper" && computerSelection=="rock") {
+                playerScore++;
+                alert(`You: ${playerSelection}. Computer: ${computerSelection}. Paper beats rock, you win.`);
+            } else if (playerSelection=="paper" && computerSelection=="scissors") {
+                computerScore++;
+                alert(`You: ${playerSelection}. Computer: ${computerSelection}. Scissors beats paper, you lose.`);
+            } else if (playerSelection=="scissors" && computerSelection=="rock") {
+                computerScore++;
+                alert(`You: ${playerSelection}. Computer: ${computerSelection}. Rock beats scissors, you lose.`);
+            } else if (playerSelection=="scissors" && computerSelection=="paper") {
+                playerScore++;
+                alert(`You: ${playerSelection}. Computer: ${computerSelection}. Scissors beats paper, you win.`);
+            } else {
+                alert("There seems to be an error here.")
+            };
+        } 
+
+        function game() {
+            for(let i = 0; i < 5; i++) {
+                playerSelection = prompt("Rock, paper, or scissors?").toLowerCase();
+                if (playerSelection == "rock" || playerSelection == "paper" || playerSelection == "scissors") {
+                     computerSelection = computerPlay();
+                     playRound(playerSelection, computerSelection);
+                } else { 
+                     alert(`You gotta type either one of the three options!`); 
+                }
+            }
+            if (playerScore>computerScore) {
+                alert(`Your score: ${playerScore}. Computer score: ${computerScore}. You win! Congratulations!`)
+            } else if (playerScore<computerScore) {
+                alert(`Your score: ${playerScore}. Computer score: ${computerScore}. You lose! Try again!`)
+            };
+        }
+
+        game();
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+</body>
+</html>
