@@ -5,11 +5,43 @@
     <title>Document</title>
 </head>
 <body>
+    <div>
+        <button id="reset">Reset</button>
+    </div>
+    <div>
+        <div id="selectionImageContainer">   </div>
+    </div>
+    <div id ="mainButtons">
+        <button id="rock">Rock</button>
+        <button id="paper">Paper</button>
+        <button id="scissors">Scissors</button>
+    </div>
+    <div id="result-container">
+        <p id="result">
+        </p>
+    </div>
+
     <script>
         let playerSelection;
         let computerSelection;
-        let playerScore=0;
-        let computerScore=0;
+        let playerScore = 0;
+        let computerScore = 0;
+
+        const btn = document.querySelectorAll('#mainButtons > button'); 
+        const resultDisplay = document.querySelector('#result');
+        resultDisplay.setAttribute('style', 'color: gray; font-size: 50px; font-family: Arial;');
+        resultDisplay.textContent = `You: 0 Computer: 0`;
+        let imageContainer = document.querySelector('#selectionImageContainer');
+        const resetBtn = document.querySelector('#reset');
+        resetBtn.addEventListener('click', () => {
+            document.location.href = '';
+        })
+
+        function clearScreen(parent) {
+            while(parent.firstChild) {
+                parent.removeChild(parent.firstChild);
+            }
+        }
 
         function computerPlay() {
             let rPS = ["rock", "paper", "scissors"];
@@ -18,62 +50,59 @@
         }
                 
         function playRound(playerSelection, computerSelection) {
-            if (playerSelection==computerSelection) {
-                playerScore++; 
-                computerScore++;
-                alert( `You: ${playerSelection}. Computer: ${computerSelection}. It's a tie!`);
-            } else if (playerSelection=="rock" && computerSelection=="paper") {
-                computerScore++;
-                alert(`You: ${playerSelection}. Computer: ${computerSelection}. Paper beats rock, you lose.`);
-            } else if (playerSelection=="rock" && computerSelection=="scissors") {
+            if (playerSelection == computerSelection) {
+                resultDisplay.textContent = `You: ${playerScore} Computer: ${computerScore} A tie!`;            
+            } else if ((playerSelection == "rock" && computerSelection == "scissors") || 
+                        (playerSelection == "paper" && computerSelection == "rock") || 
+                        (playerSelection == "scissors" && computerSelection == "paper")) {
                 playerScore++;
-                alert(`You: ${playerSelection}. Computer: ${computerSelection}. Rock beats scissors, you win.`);
-            } else if (playerSelection=="paper" && computerSelection=="rock") {
-                playerScore++;
-                alert(`You: ${playerSelection}. Computer: ${computerSelection}. Paper beats rock, you win.`);
-            } else if (playerSelection=="paper" && computerSelection=="scissors") {
-                computerScore++;
-                alert(`You: ${playerSelection}. Computer: ${computerSelection}. Scissors beats paper, you lose.`);
-            } else if (playerSelection=="scissors" && computerSelection=="rock") {
-                computerScore++;
-                alert(`You: ${playerSelection}. Computer: ${computerSelection}. Rock beats scissors, you lose.`);
-            } else if (playerSelection=="scissors" && computerSelection=="paper") {
-                playerScore++;
-                alert(`You: ${playerSelection}. Computer: ${computerSelection}. Scissors beats paper, you win.`);
+                resultDisplay.textContent = `You: ${playerScore} Computer: ${computerScore} ${playerSelection.toUpperCase()} beats ${computerSelection.toUpperCase()}.`
             } else {
-                alert("There seems to be an error here.")
-            };
+                computerScore++;
+                resultDisplay.textContent = `You: ${playerScore} Computer: ${computerScore} ${computerSelection.toUpperCase()} beats ${playerSelection.toUpperCase()}.`
+            }
         } 
 
-        function game() {
-            for(let i = 0; i < 5; i++) {
-                playerSelection = prompt("Rock, paper, or scissors?").toLowerCase();
-                if (playerSelection == "rock" || playerSelection == "paper" || playerSelection == "scissors") {
-                     computerSelection = computerPlay();
-                     playRound(playerSelection, computerSelection);
-                } else { 
-                     alert(`You gotta type either one of the three options!`); 
-                }
-            }
-            if (playerScore>computerScore) {
-                alert(`Your score: ${playerScore}. Computer score: ${computerScore}. You win! Congratulations!`)
-            } else if (playerScore<computerScore) {
-                alert(`Your score: ${playerScore}. Computer score: ${computerScore}. You lose! Try again!`)
-            };
+        function displayImageSelection(playerSelection, computerSelection) {
+            let playerImg = document.createElement('img');
+            playerImg.src = `user-${playerSelection}.jpg`;
+            imageContainer.appendChild(playerImg);
+
+            let computerImg = document.createElement('img');
+            computerImg.src = `computer-${computerSelection}.jpg`;
+            imageContainer.appendChild(computerImg);
         }
 
-        game();
+        function checkScore () {
+            if (playerScore == 5 || computerScore == 5) {
+                    if (playerScore > computerScore) {
+                        resultDisplay.textContent = `You: ${playerScore} Computer: ${computerScore} You win! Congratulations!`
+                    } else if (playerScore < computerScore) {
+                        resultDisplay.textContent = `You: ${playerScore} Computer: ${computerScore} You lose! Try again!`
+                    } else {
+                        resultDisplay.textContent = `You: ${playerScore} Computer: ${computerScore} It's a tie!`
+                    };
+            }
+        }
 
+        function game() {
+            btn.forEach( (button) => {
+                button.addEventListener('click', () => {
+                    playerSelection = button.id;
+                    if (playerSelection == "rock" || playerSelection == "paper" || playerSelection == "scissors") {
+                        computerSelection = computerPlay();
+                        clearScreen(imageContainer);
+                        displayImageSelection(playerSelection, computerSelection);
+                        playRound(playerSelection, computerSelection);
+                        checkScore();
+                    } else { 
+                        alert(`There seems to be an error here.`);
+                    }   
+                })
+            })
+        }
 
-
-
-
-
-
-
-
-
-
+        game();    
     </script>
 </body>
 </html>
